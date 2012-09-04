@@ -81,14 +81,14 @@ const float afSporebatPos[4] = {30.977156f, -925.297761f, 77.176567f, 5.223932f}
 
 const float afElementPos[8][4] =
 {
-    {8.3f  , -835.3f , 21.9f, 5.0f},
-    {53.4f , -835.3f , 21.9f, 4.5f},
-    {96.0f , -861.9f , 21.8f, 4.0f},
-    {96.0f , -986.4f , 21.4f, 2.5f},
-    {54.4f , -1010.6f, 22.0f, 1.8f},
-    {9.8f  , -1012.0f, 21.7f, 1.4f},
-    {-35.0f, -987.6f , 21.5f, 0.8f},
-    {-58.9f, -901.6f , 21.5f, 6.0f}
+    {8.3f  , -835.3f , 21.9f, 45.0f},
+    {53.4f , -835.3f , 21.9f, 44.5f},
+    {96.0f , -861.9f , 21.8f, 44.0f},
+    {96.0f , -986.4f , 21.4f, 42.5f},
+    {54.4f , -1010.6f, 22.0f, 41.8f},
+    {9.8f  , -1012.0f, 21.7f, 41.4f},
+    {-35.0f, -987.6f , 21.5f, 40.8f},
+    {-58.9f, -901.6f , 21.5f, 46.0f}
 };
 
 const float afCoilfangElitePos[3][4] =
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 else
                     ++m_uiEnchantedElemental_Pos;
 
-                m_uiEnchantedElemental_Timer = urand(10000, 15000);
+                m_uiEnchantedElemental_Timer = urand(60000, 120000);
             }else m_uiEnchantedElemental_Timer -= uiDiff;
 
             //NPC_TAINTED_ELEMENTAL

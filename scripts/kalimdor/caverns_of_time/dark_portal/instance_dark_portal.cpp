@@ -179,7 +179,7 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
                 }
 
                 // Kill the npc when the shield is broken
-                if (!m_uiWorldStateShieldCount)
+                if (m_uiWorldStateShieldCount <= 0)
                 {
                     if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
                     {

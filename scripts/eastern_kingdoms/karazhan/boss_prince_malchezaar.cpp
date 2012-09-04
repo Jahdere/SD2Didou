@@ -138,7 +138,6 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-	m_firstAggro = who;
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)

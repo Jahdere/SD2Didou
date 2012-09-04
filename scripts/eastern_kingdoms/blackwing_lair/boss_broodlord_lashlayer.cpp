@@ -124,8 +124,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
 
-        if (EnterEvadeIfOutOfCombatArea(uiDiff))
-            DoScriptText(SAY_LEASH, m_creature);
+        //if (EnterEvadeIfOutOfCombatArea(uiDiff))
+        //    DoScriptText(SAY_LEASH, m_creature);
     }
 };
 CreatureAI* GetAI_boss_broodlord(Creature* pCreature)

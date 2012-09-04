@@ -108,10 +108,10 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
 
         m_uiRangeCheckTimer     = 0;
         m_uiCurrentPlatformId   = 0;
-        m_uiPlatformMoveTimer   = 35000;
+        m_uiPlatformMoveTimer   = 60000;
         m_uiFlameQuillsTimer    = 170000;                       // at the 5th platform
 
-        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;    // only after phase 2 starts
+        m_uiBerserkTimer        = 30*MINUTE*IN_MILLISECONDS;    // only after phase 2 starts
         m_uiFlamePatchTimer     = 20000;
         m_uiDiveBombTimer       = 30000;
         m_uiMeltArmorTimer      = 10000;
@@ -330,9 +330,9 @@ struct MANGOS_DLL_DECL boss_alarAI : public ScriptedAI
         {
             if (m_uiRangeCheckTimer <= uiDiff)
             {
-                if (!m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+                if (!m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE*2))
                     DoCastSpellIfCan(m_creature, SPELL_FLAME_BUFFET);
-                m_uiRangeCheckTimer = 2000;
+                m_uiRangeCheckTimer = 4000;
             }
             else
                 m_uiRangeCheckTimer -= uiDiff;

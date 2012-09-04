@@ -264,7 +264,10 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
                 }
                 case POINT_ID_FLYING:
                     if (m_bIsEventInProgress)               // Additional check for wipe case, while nazan is flying to this point
-                        m_uiFireballTimer = 1;
+                    {
+			m_uiFireballTimer = 1;
+			DoMoveToAir();
+		    }
                     break;
             }
         }
@@ -291,6 +294,11 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     void DoSplit()
     {
         m_creature->UpdateEntry(NPC_NAZAN);
+
+        // re set non atackable
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+        m_creature->SetLevitate(true);
 
         DoCastSpellIfCan(m_creature, SPELL_SUMMON_VAZRUDEN);
 

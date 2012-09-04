@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         {
             if (DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
             {
-                m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
+                m_uiEnrageTimer = MINUTE*28*IN_MILLISECONDS;
                 DoScriptText(SAY_ENRAGE2, m_creature);
             }
         }

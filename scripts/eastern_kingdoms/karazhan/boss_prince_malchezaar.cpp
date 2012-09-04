@@ -195,12 +195,15 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     uint32 m_uiPhase;
 
+    Unit* m_firstAggro;
+
     void Reset()
     {
         AxesCleanup();
         ClearWeapons();
         InfernalCleanup();
         m_positions.clear();
+	m_firstAggro = NULL;
 
         for (uint8 i = 0; i < 5; ++i)
         {
@@ -249,6 +252,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+	m_firstAggro = who;
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
@@ -303,12 +307,12 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
         //begin + 1 , so we don't target the one with the highest threat
         ThreatList::const_iterator itr = tList.begin();
-        std::advance(itr, 1);
+        std::advance(itr, 2); // XXX Never get the first one!
         for(; itr!= tList.end(); ++itr)                    //store the threat list in a different container
         {
             Unit *target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
                                                             //only on alive players
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+            if (target && m_firstAggro != target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
                 targets.push_back(target);
         }
 

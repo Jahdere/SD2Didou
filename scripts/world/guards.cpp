@@ -271,6 +271,97 @@ CreatureAI* GetAI_guard_undercity(Creature* pCreature)
     return new guardAI(pCreature);
 }
 
+// GUARD ANTI PVP
+struct MANGOS_DLL_DECL guardAI_antipvp : public ScriptedAI
+{
+    uint32 CheckTimer;
+    bool IsAttacking;
+
+    guardAI_antipvp(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+        void Reset()
+        {
+                m_creature->RemoveAllAuras();
+                m_creature->DeleteThreatList();
+                m_creature->CombatStop(true);
+                m_creature->GetMotionMaster()->MoveTargetedHome();
+                IsAttacking = false;
+        }
+
+        void CheckUnit(Unit* who)
+        {
+
+                //sLog.outDebug("ANTIPVP : Checkunit %s", who->GetName());
+
+                // test for a player
+                if(who->GetTypeId() != TYPEID_PLAYER)return;
+
+                // ATTACK_DISTANCE = 5.0f
+                if (!m_creature->IsWithinDistInMap(who, 10.0f))return;
+
+                if (!m_creature->getVictim())
+                {
+                        if(who->isAttackingPlayer() && who->getVictim() != NULL && who->getVictim()->GetTypeId() == TYPEID_PLAYER)
+                        {
+                                 sLog.outDebug("ANTIPVP : %s is in combat with %s : adding threat", who->GetName(), who->getVictim()->GetName());
+
+                                m_creature->AddThreat(who, 1.0f);
+                                AttackStart(who);
+                                IsAttacking = true;
+                        }
+                }
+        }
+
+    void UpdateAI(const uint32 diff)
+    {
+                if (CheckTimer < diff)
+                {
+                        //sLog.outDebug("ANTIPVP : Checktimer");
+                        // find all units at 10 points around
+                        Map::PlayerList const &PlList =  m_creature->GetMap()->GetPlayers();
+                        if (!PlList.isEmpty())
+                        {
+                                for(Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
+                                {
+                                        if (Player* pPlayer = i->getSource())
+                                        {
+                                                if (pPlayer->isGameMaster())
+                                                        continue;
+
+                                                if (!pPlayer->isAlive())
+                                                        continue;
+
+                                                CheckUnit(pPlayer);
+                                        }
+                                }
+                        }
+
+                        CheckTimer = 1000;
+                }
+                else CheckTimer -= diff;
+
+                if (m_creature->getVictim())
+                {
+                        //sLog.outDebug("ANTIPVP : Have vicitm : do melee attack");
+                        DoMeleeAttackIfReady();
+                }
+                else if (IsAttacking)
+                {
+                        Reset();
+                }
+
+    }
+};
+
+/*******************************************************
+ * guard_antipvp
+ *******************************************************/
+CreatureAI* GetAI_guard_antipvp(Creature* pCreature)
+{
+    return new guardAI_antipvp(pCreature);
+}
+
+
 void AddSC_guards()
 {
     Script* pNewScript;
@@ -373,5 +464,10 @@ void AddSC_guards()
     pNewScript = new Script;
     pNewScript->Name = "guard_undercity";
     pNewScript->GetAI = &GetAI_guard_undercity;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "guard_antipvp";
+    pNewScript->GetAI = &GetAI_guard_antipvp;
     pNewScript->RegisterSelf();
 }

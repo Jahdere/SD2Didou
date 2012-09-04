@@ -1420,6 +1420,25 @@ bool EffectDummyCreature_npc_redemption_target(Unit* pCaster, uint32 uiSpellId, 
     return false;
 }
 
+// TODO Remove this 'script' when combat movement can be proper prevented from core-side
+struct MANGOS_DLL_DECL npc_poteau : public Scripted_NoMovementAI
+{
+    npc_poteau(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    void Reset() {}
+    void AttackStart(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* pWho) {}
+    void UpdateAI(const uint32 uiDiff) {}
+};
+
+CreatureAI* GetAI_npc_poteau(Creature* pCreature)
+{
+    return new npc_poteau(pCreature);
+}
+
+
+
+
 void AddSC_npcs_special()
 {
     Script* pNewScript;
@@ -1485,4 +1504,10 @@ void AddSC_npcs_special()
     pNewScript->GetAI = &GetAI_npc_redemption_target;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_redemption_target;
     pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_poteau";
+    pNewScript->GetAI = &GetAI_npc_poteau;
+    pNewScript->RegisterSelf();
+
 }

@@ -33,6 +33,50 @@ EndContentData */
 
 
 /*######
+## npc_brazen
+######*/
+#define GOSSIP_ITEM_READY       "I am ready to go to Durnholde Keep."
+
+enum
+{
+    TEXT_ID_BRAZEN_HELLO            = 9779,
+    TEXT_ID_REQUIRE_BOMBS           = 9780,
+
+    ITEM_ENTRY_BOMBS                = 25853,
+    TAXI_PATH_ID                    = 534,
+};
+
+
+bool GossipHello_npc_brazen(Player* pPlayer, Creature* pCreature)
+{
+    sLog.outDebug("SD2 : Gossip hello on brazen required");
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_READY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_BRAZEN_HELLO, pCreature->GetObjectGuid());
+    return true;
+}
+
+bool GossipSelect_npc_brazen(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    sLog.outDebug("SD2 : Gossipe select action %u", uiAction);
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        if (!pPlayer->HasItemCount(ITEM_ENTRY_BOMBS,1))
+	{
+	    sLog.outDebug("SD2 : Brazen - no item bombs");
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_REQUIRE_BOMBS, pCreature->GetObjectGuid());
+	}
+        else
+        {
+	    sLog.outDebug("SD2 : Ok fly to durn keep");
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
+        }
+    }
+    return true;
+}
+
+
+/*######
 ## npc_erozion
 ######*/
 
@@ -41,8 +85,6 @@ enum
     GOSSIP_ITEM_NEED_BOMBS          = -3560001,
     TEXT_ID_DEFAULT                 = 9778,
     TEXT_ID_GOT_ITEM                = 9515,
-
-    ITEM_ENTRY_BOMBS                = 25853,
 };
 
 bool GossipHello_npc_erozion(Player* pPlayer, Creature* pCreature)
@@ -1317,6 +1359,12 @@ bool GossipSelect_npc_taretha(Player* pPlayer, Creature* pCreature, uint32 uiSen
 void AddSC_old_hillsbrad()
 {
     Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_brazen";
+    pNewScript->pGossipHello = &GossipHello_npc_brazen;
+    pNewScript->pGossipSelect = &GossipSelect_npc_brazen;
+    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_erozion";

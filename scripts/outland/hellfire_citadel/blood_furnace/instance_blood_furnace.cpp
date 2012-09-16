@@ -25,7 +25,7 @@ EndScriptData */
 #include "blood_furnace.h"
 
 instance_blood_furnace::instance_blood_furnace(Map* pMap) : ScriptedInstance(pMap),
-    m_uiBroggokEventTimer(30000),
+    m_uiBroggokEventTimer(120000),
     m_uiBroggokEventPhase(0)
 {
     Initialize();
@@ -103,6 +103,8 @@ void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_DOOR_MAKER_FRONT);
                 DoUseDoorOrButton(GO_DOOR_MAKER_REAR);
+		// Init Brogook event
+		BroggokOrcsInit();
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -219,7 +221,7 @@ void instance_blood_furnace::DoNextBroggokEventPhase()
     }
 
     // Prepare for further handling
-    m_uiBroggokEventTimer = 30000;
+    m_uiBroggokEventTimer = 120000;
     ++m_uiBroggokEventPhase;
 }
 
@@ -334,6 +336,30 @@ void instance_blood_furnace::DoSortBroggokOrcs()
         }
     }
 }
+
+// Set Broggork Orcs not attackable at first
+void instance_blood_furnace::BroggokOrcsInit()
+{
+    for (GuidList::const_iterator itr = m_luiNascentOrcGuids.begin(); itr != m_luiNascentOrcGuids.end(); ++itr)
+    {
+        if (Creature* pOrc = instance->GetCreature(*itr))
+        {
+            for (uint8 i = 0; i < MAX_ORC_WAVES; ++i)
+            {
+                if (GameObject* pDoor = instance->GetGameObject(m_aBroggokEvent[i].m_cellGuid))
+                {
+                    if (pOrc->IsWithinDistInMap(pDoor, 15.0f))
+                    {
+			pOrc->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+	                pOrc->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+			break;
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 // Helper function to calculate the position to where the orcs should move
 // For case of orc-indexes the difference, for Braggok his position

@@ -77,6 +77,7 @@ class MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
         void GetKelidanAddList(GuidList& lList) { lList = m_lChannelersGuids; m_lChannelersGuids.clear(); }
 
     private:
+	void BroggokOrcsInit();
         void DoSortBroggokOrcs();
         void DoNextBroggokEventPhase();
 

@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
         m_uiGustOfWindTimer     = urand(20000, 30000);
         m_uiStormTimer          = 50000;
         m_uiSummonEagleTimer    = 65000;
-        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 15*MINUTE*IN_MILLISECONDS;
     }
 
     void Aggro(Unit* pWho)

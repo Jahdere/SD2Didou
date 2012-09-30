@@ -204,7 +204,7 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
                 if (m_auiEncounter[TYPE_RUN_EVENT_TIME])
                     SetData(TYPE_RUN_EVENT_TIME, m_auiEncounter[TYPE_RUN_EVENT_TIME]);
                 else
-                    SetData(TYPE_RUN_EVENT_TIME, 20);   // 20 Minutes as default time
+                    SetData(TYPE_RUN_EVENT_TIME, 60);   // 20 Minutes as default time
                 DoUpdateWorldState(WORLD_STATE_ID, 1);
             }
             if (uiData == FAIL)

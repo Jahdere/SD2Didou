@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
         if (uiPointId)
         {
             m_creature->SetLevitate(false);
-            m_creature->SetFacingTo(afKaelLandPoint[4]);
+            m_creature->SetFacingTo(afKaelLandPoint[3]);
             m_uiTransformTimer = MINUTE*IN_MILLISECONDS;
         }
     }
@@ -81,6 +81,18 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
                 {
                     DoCastSpellIfCan(m_creature, SPELL_ORB_KILL_CREDIT, CAST_TRIGGERED);
                     m_creature->UpdateEntry(NPC_KALECGOS);
+
+		    // QUEST CREDIT WORKAROUND
+		    instance_magisters_terrace* m_pInstance = (instance_magisters_terrace*)m_creature->GetInstanceData();
+		    Map::PlayerList const& lPlayerList = m_pInstance->instance->GetPlayers();
+                    if (!lPlayerList.isEmpty())
+                    {
+                    	for(Map::PlayerList::const_iterator itr = lPlayerList.begin(); itr != lPlayerList.end(); ++itr)
+                        {
+                            if (Player* pPlayer = itr->getSource())
+                            	pPlayer->KilledMonsterCredit(25042, m_creature->GetObjectGuid());
+                        }
+                    }
 
                     m_uiTransformTimer = 0;
                 }
